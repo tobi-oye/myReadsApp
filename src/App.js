@@ -12,7 +12,7 @@ class BooksApp extends React.Component {
      */
     showSearchPage: false,
  
-    bookShelves: {currentlyReading:{shelveName:"Currently Reading",books:[]}, wantToRead:{shelveName:"Want to Read",books:[]}}, read:{shelveName:"Read",books:[]},
+    bookShelves: {currentlyReading:{shelveName:"Currently Reading",books:[],id:"currentlyReading"}, wantToRead:{shelveName:"Want to Read",books:[],id:"wantToRead"}}, read:{shelveName:"Read",books:[],id:"read"},
     options: {currentlyReading:{label:"Currently Reading",id:"currentlyReading"}, wantToRead:{label:"Want to Read",id:"wantToRead"}, read:{label:"Read",id:"read"}, none:{label:"None",id:"none"}},
     allBooks:[],
   };
@@ -25,21 +25,42 @@ class BooksApp extends React.Component {
    *  if true add the new element id  to the array and filter the previous element based on id
    * 
    */
-  // moveBook = (singleElem,optionvalue,elem) => {
-  //   //  console.log(elem,e.target.value)
-  //   let newValue = options.target.value
-  //   if(newValue === "currentlyReading"){
-  //     BooksAPI.update(singleElem,newValue) 
-  //     elem.filter((element) => {
-  //       this.setState((previouState)=>{
-  //         previouState.
-  //       })
-  //     })
-  //     }
-  //   }
+  moveBook = (book,e) => {
+     console.log(book.id,e.target.value)
+    }
     
-  // };
-  
+
+  /**
+   * function to call the update api
+   * it will accept the bookid and shelve name as arguement
+   */
+  updateBook(bookId,shelveName){
+    return BooksAPI.update(bookId,shelveName)
+  }
+
+  removeBook(singleElem,bigElem){
+    if (bigElem.shelveName === 'currentlyReading'){
+      return this.setState((previousState) => ({
+        bookShelves: previousState.currentlyReading.books.filter((elem) => {
+          return elem.id !== singleElem.id
+        })
+     }))
+    }
+    else if (bigElem.shelveName === 'wantToRead'){
+      return this.setState((previousState) => ({
+        bookShelves: previousState.wantToRead.books.filter((elem) => {
+          return elem.id !== singleElem.id
+        })
+     }))
+    }
+    else if (bigElem.shelveName === 'read'){
+      return this.setState((previousState) => ({
+        bookShelves: previousState.read.books.filter((elem) => {
+          return elem.id !== singleElem.id
+        })
+     }))
+    }
+  }
 
   componentDidMount(){
     BooksAPI.getAll().then((res) => {
@@ -51,7 +72,7 @@ class BooksApp extends React.Component {
       }
     })
   })
-}
+};
   
 
 
@@ -150,7 +171,7 @@ class BooksApp extends React.Component {
         )}
       </div>
     );
-  }
-};
+  };
 
+};
 export default BooksApp;
