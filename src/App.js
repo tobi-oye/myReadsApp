@@ -1,6 +1,9 @@
 import React from "react";
 import * as BooksAPI from "./BooksAPI";
 import "./App.css";
+import SearchPage from "./components/searchPage";
+import MainPage from "./components/mainPage";
+import { Route } from "react-router-dom";
 
 class BooksApp extends React.Component {
   state = {
@@ -10,168 +13,174 @@ class BooksApp extends React.Component {
      * users can use the browser's back and forward buttons to navigate between
      * pages, as well as provide a good URL they can bookmark and share.
      */
-    showSearchPage: false,
- 
-    bookShelves: {currentlyReading:{shelveName:"Currently Reading",books:[],id:"currentlyReading"}, wantToRead:{shelveName:"Want to Read",books:[],id:"wantToRead"}}, read:{shelveName:"Read",books:[],id:"read"},
-    options: {currentlyReading:{label:"Currently Reading",id:"currentlyReading"}, wantToRead:{label:"Want to Read",id:"wantToRead"}, read:{label:"Read",id:"read"}, none:{label:"None",id:"none"}},
-    allBooks:[],
+
+    bookShelves: {
+      currentlyReading: { shelveName: "Currently Reading", books: [] },
+      wantToRead: { shelveName: "Want to Read", books: [] },
+      read: { shelveName: "Read", books: [] },
+    },
+    options: {
+      currentlyReading: { label: "Currently Reading", id: "currentlyReading" },
+      wantToRead: { label: "Want to Read", id: "wantToRead" },
+      read: { label: "Read", id: "read" },
+      none: { label: "None", id: "none" },
+    },
+    allBooks: [],
   };
 
   /**
    * function to move book from one book shelve to the other
    * @param {*} event
    * it will get element id and clicked value from the click event
-   * conditional statement for the various values 
+   * conditional statement for the various values
    *  if true add the new element id  to the array and filter the previous element based on id
-   * 
+   *
    */
-  moveBook = (book,e) => {
-     console.log(book.id,e.target.value)
-    }
-    
+  moveBook = (bookShelf, e, book) => {
+    let value = e.target.value;
+    //  console.log(bookShelf.id,e.target.value,book.id)
+    // debugger
+    this.removeBook(book, bookShelf, value);
+    // debugger
+    this.addBook(value, book);
+    this.updateBook(book, value);
+    console.log(this.updateBook(book, value));
+    console.log(book.id, value);
+  };
 
   /**
    * function to call the update api
    * it will accept the bookid and shelve name as arguement
    */
-  updateBook(bookId,shelveName){
-    return BooksAPI.update(bookId,shelveName)
+  updateBook(bookId, shelveName) {
+    // debugger
+    return BooksAPI.update(bookId, shelveName);
+  }
+  addBook(value, newElem) {
+    if (value === "currentlyReading") {
+      return this.setState((previousState) => {
+        let bookShelves = Object.assign({}, previousState.bookShelves);
+        bookShelves.currentlyReading.books = previousState.bookShelves.currentlyReading.books.concat(
+          newElem
+        );
+        return { bookShelves };
+      });
+    } else if (value === "wantToRead") {
+      return this.setState((previousState) => {
+        let bookShelves = Object.assign({}, previousState.bookShelves);
+        bookShelves.wantToRead.books = previousState.bookShelves.wantToRead.books.concat(
+          newElem
+        );
+        return { bookShelves };
+      });
+    } else if (value === "read") {
+      return this.setState((previousState) => {
+        let bookShelves = Object.assign({}, previousState.bookShelves);
+        bookShelves.read.books = previousState.bookShelves.read.books.concat(
+          newElem
+        );
+        return { bookShelves };
+      });
+    }
+  }
+  /**
+   * removeBook is a function used to remove the selected books from its current bookshelve
+   * @param {object for the book selected} singleElem
+   * @param {object for the bookshelve selected} bigElem
+   * @param {objet for the selected options from each book} value
+   */
+  removeBook(singleElem, bigElem, value) {
+    // debugger
+    if (bigElem.id === "currentlyReading" && value !== "none") {
+      return this.setState((previousState) => {
+        let bookShelves = Object.assign({}, previousState.bookShelves);
+        bookShelves.currentlyReading.books = previousState.bookShelves.currentlyReading.books.filter(
+          (elem) => {
+            // console.log(elem.id,singleElem.id);
+            return elem.id !== singleElem.id;
+          }
+        );
+        return { bookShelves };
+      });
+    } else if (bigElem.id === "wantToRead" && value !== "none") {
+      return this.setState((previousState) => {
+        let bookShelves = Object.assign({}, previousState.bookShelves);
+        bookShelves.wantToRead.books = previousState.bookShelves.wantToRead.books.filter(
+          (elem) => {
+            // console.log(elem.id,singleElem.id);
+            return elem.id !== singleElem.id;
+          }
+        );
+        return { bookShelves };
+      });
+    } else if (bigElem.id === "read" && value !== "none") {
+      return this.setState((previousState) => {
+        let bookShelves = Object.assign({}, previousState.bookShelves);
+        bookShelves.read.books = previousState.bookShelves.read.books.filter(
+          (elem) => {
+            // console.log(elem.id,singleElem.id);
+            return elem.id !== singleElem.id;
+          }
+        );
+        return { bookShelves };
+      });
+    }
   }
 
-  removeBook(singleElem,bigElem){
-    if (bigElem.shelveName === 'currentlyReading'){
-      return this.setState((previousState) => ({
-        bookShelves: previousState.currentlyReading.books.filter((elem) => {
-          return elem.id !== singleElem.id
-        })
-     }))
-    }
-    else if (bigElem.shelveName === 'wantToRead'){
-      return this.setState((previousState) => ({
-        bookShelves: previousState.wantToRead.books.filter((elem) => {
-          return elem.id !== singleElem.id
-        })
-     }))
-    }
-    else if (bigElem.shelveName === 'read'){
-      return this.setState((previousState) => ({
-        bookShelves: previousState.read.books.filter((elem) => {
-          return elem.id !== singleElem.id
-        })
-     }))
-    }
-  }
-
-  componentDidMount(){
+  componentDidMount() {
     BooksAPI.getAll().then((res) => {
-      return this.setState({allBooks:res, 
-        bookShelves:{
-          currentlyReading: {shelveName:"Currently Reading",books: res.splice(0,2)}, 
-        wantToRead:{shelveName:"Want to Read",books:res.splice(2,2)}, 
-        read:{shelveName:"Read",books:res}
-      }
-    })
-  })
-};
-  
-
+      return this.setState({
+        allBooks: res,
+        bookShelves: {
+          currentlyReading: {
+            shelveName: "Currently Reading",
+            books: res.slice(0, 2),
+            id: "currentlyReading",
+          },
+          wantToRead: {
+            shelveName: "Want to Read",
+            books: res.slice(2, 4),
+            id: "wantToRead",
+          },
+          read: { shelveName: "Read", books: res.slice(4, 7), id: "read" },
+        },
+      });
+    });
+  }
 
   render() {
-   const {showSearchPage,bookShelves,options,allBooks} = this.state;
-  //  console.log(this.state.wantToRead)
-
+    const { showSearchPage, bookShelves, options, allBooks } = this.state;
+    //  console.log(this.state.wantToRead)
+    // console.log(bookShelves.wantToRead.books);
     return (
       <div className="app">
-           
-        {this.state.showSearchPage ? (
-          <div className="search-books">h
-            <div className="search-books-bar">
-              <button
-                className="close-search"
-                onClick={() => this.setState({ showSearchPage: false })}
-              >
-                Close
-              </button>
-              <div className="search-books-input-wrapper">
-                {/*
-                  NOTES: The search from BooksAPI is limited to a particular set of search terms.
-                  You can find these search terms here:
-                  https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
-
-                  However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
-                  you don't find a specific author or title. Every search is limited by search terms.
-                */}
-                <input type="text" placeholder="Search by title or author" />
-              </div>
-            </div>
-            <div className="search-books-results">
-              <ol className="books-grid" />
-            </div>
-          </div>
-        ) : (
-          <div className="list-books">
-            <div className="list-books-title">
-              <h1>MyReads</h1>
-
-            </div>
-            <div className="list-books-content">
-              <div>
-                {Object.values(bookShelves).map((book) => {
-                                 return  <div className="bookshelf">
-                                  <h2 className="bookshelf-title">{book.shelveName}</h2>
-                                  <div className="bookshelf-books">
-                                    <ol className="books-grid currentlyReading">
-                                    {book.books.map((img) => {
-                                      return  <li>
-                                      <div className="book">
-                                        <div className="book-top">
-                                          <div
-                                            className="book-cover"
-                                            style={{
-                                              width: 128,
-                                              height: 193,
-                                              backgroundImage: `url(${img.imageLinks.smallThumbnail})`,
-                                            }}
-                                          />
-                
-                                          <div className="book-shelf-changer">
-                                            <select
-                                              onClick={(e) => {
-                                                return this.moveBook(book,e);
-                                              }}
-                                            >
-                                              <option value="move" disabled>
-                                                Move to...
-                                              </option>
-                                              {Object.values(options).map((elem) => {
-                                                return <option value ={elem.id} > {elem.label} </option>;
-                                              })}
-                                            </select>
-                                          </div>
-                                        </div>
-                                        <div className="book-title">
-                                          {img.title}
-                                        </div>
-                                            <div className="book-authors">{img.authors[0]}</div>
-                                      </div>
-                                    </li>
-                                    })}
-                                    </ol>
-                                  </div>
-                                </div>
-                })}
-              </div>
-            </div>
-            <div className="open-search">
-              <button onClick={() => this.setState({ showSearchPage: true })}>
-                Add a book
-              </button>
-            </div>
-          </div>
-        )}
+        <Route
+          path="/searchPage"
+          render={() => {
+            return (
+              <SearchPage
+                options={options}
+                showMainPage={this.showMainPage}
+                moveBook={this.moveBook}
+              />
+            );
+          }}
+        />
+        <Route
+          exact
+          path="/"
+          render={() => {
+            return (
+              <MainPage
+                bookShelves={bookShelves}
+                options={options}
+                moveBook={this.moveBook}
+              />
+            );
+          }}
+        />
       </div>
     );
-  };
-
-};
+  }
+}
 export default BooksApp;

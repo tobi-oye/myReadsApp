@@ -67,7 +67,7 @@ update(book, shelf)
 * Returns a Promise which resolves to a JSON object containing the response data of the POST request
 
 ### `search`
-
+Done
 Method Signature:
 
 ```js
