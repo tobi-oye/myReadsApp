@@ -149,7 +149,7 @@ class BooksApp extends React.Component {
   }
 
   render() {
-    const { showSearchPage, bookShelves, options, allBooks } = this.state;
+    const { bookShelves, options } = this.state;
     //  console.log(this.state.wantToRead)
     // console.log(bookShelves.wantToRead.books);
     return (

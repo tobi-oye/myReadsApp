@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { Link, button } from "react-router-dom";
-import BooksApp from "../App";
+import { Link } from "react-router-dom";
 
 class MainPage extends Component {
   render() {
