@@ -38,7 +38,7 @@ class MainPage extends Component {
                                       return this.props.moveBook(book, e, img);
                                     }}
                                   >
-                                    <option value="move" disabled>
+                                    <option value="move" disabled selected>
                                       Move to...
                                     </option>
                                     {Object.values(this.props.options).map(
