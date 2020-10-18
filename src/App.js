@@ -175,11 +175,14 @@ class BooksApp extends React.Component {
           path="/"
           render={() => {
             return (
-              <MainPage
-                bookShelves={bookShelves}
-                options={options}
-                moveBook={this.moveBook}
-              />
+              <div>
+                <MainPage
+                  bookShelves={bookShelves}
+                  options={options}
+                  moveBook={this.moveBook}
+                />
+                <footer>Developed by Oyewole Oluwatobi</footer>
+              </div>
             );
           }}
         />
