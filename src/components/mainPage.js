@@ -37,7 +37,7 @@ class MainPage extends Component {
                                     onChange={(e) => {
                                       return this.props.moveBook(book, e, img);
                                     }}
-                                    defaultValue="none"
+                                    defaultValue={book.id}
                                   >
                                     <option value="move" disabled>
                                       Move to...

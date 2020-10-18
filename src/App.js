@@ -15,9 +15,13 @@ class BooksApp extends React.Component {
      */
 
     bookShelves: {
-      currentlyReading: { shelveName: "Currently Reading", books: [] },
-      wantToRead: { shelveName: "Want to Read", books: [] },
-      read: { shelveName: "Read", books: [] },
+      currentlyReading: {
+        shelveName: "Currently Reading",
+        books: [],
+        id: "currentlyReading",
+      },
+      wantToRead: { shelveName: "Want to Read", books: [], id: "wantToRead" },
+      read: { shelveName: "Read", books: [], id: "read" },
     },
     options: {
       currentlyReading: { label: "Currently Reading", id: "currentlyReading" },

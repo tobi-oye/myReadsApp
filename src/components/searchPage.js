@@ -77,24 +77,22 @@ class SearchPage extends Component {
 
                           <div className="book-shelf-changer">
                             <select
-                              onClick={(e) => {
+                              onChange={(e) => {
                                 return this.props.moveBook([], e, searchElem);
                               }}
+                              defaultValue="none"
                             >
                               <option value="move" disabled>
                                 Move to...
                               </option>
-                              {Object.values(this.props.options)
-                                .slice(0, 3)
-                                .map((elem) => {
-                                  return (
-                                    <option value={elem.id} key={elem.id}>
-                                      {" "}
-                                      {elem.label}{" "}
-                                    </option>
-                                  );
-                                })}
-                              <option selected>none</option>
+                              {Object.values(this.props.options).map((elem) => {
+                                return (
+                                  <option value={elem.id} key={elem.id}>
+                                    {" "}
+                                    {elem.label}{" "}
+                                  </option>
+                                );
+                              })}
                             </select>
                           </div>
                         </div>
