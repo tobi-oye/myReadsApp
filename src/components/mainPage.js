@@ -34,11 +34,12 @@ class MainPage extends Component {
 
                                 <div className="book-shelf-changer">
                                   <select
-                                    onClick={(e) => {
+                                    onChange={(e) => {
                                       return this.props.moveBook(book, e, img);
                                     }}
+                                    defaultValue="none"
                                   >
-                                    <option value="move" disabled selected>
+                                    <option value="move" disabled>
                                       Move to...
                                     </option>
                                     {Object.values(this.props.options).map(
